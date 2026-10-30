@@ -86,6 +86,7 @@ app.put('/movies/:id', (req, res) => {
   };
   save(data);
   res.json(data.movies[index]);
+  console.log(res.body);
 });
 
 // TOGGLE FAVORITE

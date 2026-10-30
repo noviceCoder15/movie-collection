@@ -1,0 +1,15 @@
+[Unit]
+Description=Movie Collection API
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+WorkingDirectory={{ app_dir }}
+Environment=PORT={{ app_port }}
+Environment=DATA_FILE={{ data_file }}
+ExecStart=/usr/bin/node {{ app_dir }}/server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
