@@ -79,9 +79,24 @@ app.put('/movies/:id', (req, res) => {
   const index = data.movies.findIndex((m) => m.id === Number(req.params.id));
   if (index === -1) return res.status(404).json({ error: 'Movie not found' });
 
-  data.movies[index] = { id: data.movies[index].id, ...value };
+  data.movies[index] = {
+    id: data.movies[index].id,
+    favorite: data.movies[index].favorite || false,
+    ...value,
+  };
   save(data);
   res.json(data.movies[index]);
+});
+
+// TOGGLE FAVORITE
+app.patch('/movies/:id/favorite', (req, res) => {
+  const data = load();
+  const movie = data.movies.find((m) => m.id === Number(req.params.id));
+  if (!movie) return res.status(404).json({ error: 'Movie not found' });
+
+  movie.favorite = !movie.favorite;
+  save(data);
+  res.json(movie);
 });
 
 // DELETE

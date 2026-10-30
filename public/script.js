@@ -73,8 +73,12 @@ function visibleMovies() {
   const q = $('#search').value.trim().toLowerCase();
   const sort = $('#sort').value;
 
-  const list = movies.filter((m) =>
-    [m.title, m.director, m.genre].some((v) => (v || '').toLowerCase().includes(q))
+  const favOnly = $('#fav-only').checked;
+
+  const list = movies.filter(
+    (m) =>
+      (!favOnly || m.favorite) &&
+      [m.title, m.director, m.genre].some((v) => (v || '').toLowerCase().includes(q))
   );
 
   const sorters = {
@@ -110,7 +114,12 @@ function cardFor(m) {
   const del = el('button', 'btn danger small', 'Delete');
   del.type = 'button';
   del.onclick = () => removeMovie(m);
-  actions.append(edit, del);
+  const fav = el('button', 'btn ghost small fav' + (m.favorite ? ' on' : ''), m.favorite ? '♥' : '♡');
+  fav.type = 'button';
+  fav.title = m.favorite ? 'Remove from favorites' : 'Add to favorites';
+  fav.setAttribute('aria-label', fav.title);
+  fav.onclick = () => toggleFavorite(m);
+  actions.append(fav, edit, del);
   body.appendChild(actions);
 
   card.appendChild(body);
@@ -225,10 +234,21 @@ async function removeMovie(movie) {
   }
 }
 
+// ---------- Favorites ----------
+async function toggleFavorite(movie) {
+  try {
+    await request(`/movies/${movie.id}/favorite`, { method: 'PATCH' });
+    await loadMovies();
+  } catch (err) {
+    toast(err.message, true);
+  }
+}
+
 // ---------- Wiring ----------
 $('#add-btn').addEventListener('click', () => openForm(null));
 $('#empty-add').addEventListener('click', () => openForm(null));
 $('#search').addEventListener('input', render);
 $('#sort').addEventListener('change', render);
+$('#fav-only').addEventListener('change', render);
 
 loadMovies();
