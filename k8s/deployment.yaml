@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-deployment
+  labels:
+    app: movie-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: movie-api
+  template:
+    metadata:
+      labels:
+        app: movie-api
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: movie-api
+          image: movie-collection:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: movie-config
+          volumeMounts:
+            - name: movie-data
+              mountPath: /data
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+      volumes:
+        - name: movie-data
+          persistentVolumeClaim:
+            claimName: movie-data-pvc
