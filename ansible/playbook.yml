@@ -3,6 +3,6 @@
   hosts: movie_servers
   become: true
   vars:
-    app_port: 3000          # variable: change the port here or with -e app_port=...
+    app_port: 3100          # variable: change the port here or with -e app_port=...
   roles:
     - movie_app
