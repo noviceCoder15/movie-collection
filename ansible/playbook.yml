@@ -1,0 +1,8 @@
+---
+- name: Configure server and deploy Movie Collection API
+  hosts: movie_servers
+  become: true
+  vars:
+    app_port: 3000          # variable: change the port here or with -e app_port=...
+  roles:
+    - movie_app

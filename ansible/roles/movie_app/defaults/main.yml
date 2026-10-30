@@ -1,0 +1,9 @@
+---
+app_name: movie-app
+app_user: movieapp
+app_dir: /opt/movie-collection
+app_port: 3000
+node_major: 22
+data_dir: /var/lib/movie-collection
+data_file: "{{ data_dir }}/movies.json"
+artifact_path: /mnt/c/Users/veaag/OneDrive/Desktop/movie-collection/dist/movie-collection-1.0.0.tar.gz
