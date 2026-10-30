@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Movie</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎬 Movie Collection</h1>
+    <nav>
+      <a href="index.html">All Movies</a>
+      <a href="add.html">Add Movie</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="movie-form">
+      <label for="title">Title *</label>
+      <input id="title" required>
+
+      <label for="director">Director *</label>
+      <input id="director" required>
+
+      <label for="year">Year</label>
+      <input id="year" type="number" min="1888" max="2100">
+
+      <label for="rating">Rating (0–10)</label>
+      <input id="rating" type="number" step="0.1" min="0" max="10">
+
+      <div class="actions">
+        <button type="submit">Save Movie</button>
+        <a class="btn secondary" href="index.html">Cancel</a>
+      </div>
+      <p id="message"></p>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById('movie-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const year = document.getElementById('year').value;
+      const rating = document.getElementById('rating').value;
+      const movie = {
+        title: document.getElementById('title').value.trim(),
+        director: document.getElementById('director').value.trim(),
+        year: year ? Number(year) : undefined,
+        rating: rating ? Number(rating) : undefined,
+      };
+      const res = await fetch('/movies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(movie),
+      });
+      if (res.ok) {
+        window.location.href = 'index.html';
+      } else {
+        const err = await res.json();
+        document.getElementById('message').textContent = err.error || 'Something went wrong';
+      }
+    });
+  </script>
+</body>
+</html>

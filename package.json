@@ -1,0 +1,12 @@
+{
+  "name": "movie-collection",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest --forceExit",
+    "build": "mkdir -p dist && tar -czf dist/movie-collection-${VERSION:-local}.tar.gz app.js server.js public package.json package-lock.json"
+  },
+  "dependencies": { "express": "^4.21.2" },
+  "devDependencies": { "jest": "^29.7.0", "supertest": "^7.0.0" }
+}

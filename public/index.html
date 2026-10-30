@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movie Collection</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎬 Movie Collection</h1>
+    <nav>
+      <a href="index.html">All Movies</a>
+      <a href="add.html">Add Movie</a>
+    </nav>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Director</th><th>Year</th><th>Rating</th><th>Action</th></tr>
+      </thead>
+      <tbody id="movie-list"></tbody>
+    </table>
+    <p id="empty" hidden>No movies yet. Click "Add Movie" to add one.</p>
+  </main>
+
+  <script>
+    async function loadMovies() {
+      const res = await fetch('/movies');
+      const movies = await res.json();
+      const list = document.getElementById('movie-list');
+      list.innerHTML = '';
+      document.getElementById('empty').hidden = movies.length > 0;
+
+      movies.forEach((m) => {
+        const tr = document.createElement('tr');
+        [m.title, m.director, m.year ?? '-', m.rating ?? '-'].forEach((value) => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.appendChild(td);
+        });
+
+        const actionTd = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.textContent = 'Delete';
+        btn.className = 'danger';
+        btn.onclick = async () => {
+          if (confirm('Delete "' + m.title + '"?')) {
+            await fetch('/movies/' + m.id, { method: 'DELETE' });
+            loadMovies();
+          }
+        };
+        actionTd.appendChild(btn);
+        tr.appendChild(actionTd);
+        list.appendChild(tr);
+      });
+    }
+    loadMovies();
+  </script>
+</body>
+</html>
