@@ -15,7 +15,7 @@ const SEED = {
       genre: 'Sci-Fi',
       rating: 8.8,
       review: 'A heist inside a dream. Dense, loud and rewatchable every single time.',
-      poster: '',
+      poster: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrrFOFA31IxsW8YTci1RxsdapEdUHace1q7tLb43EE0w&s=10',
     },
     {
       id: 2,
@@ -25,7 +25,7 @@ const SEED = {
       genre: 'Thriller',
       rating: 8.5,
       review: 'Funny, then tense, then devastating. The staircase scenes stay with you.',
-      poster: '',
+      poster: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEWP0EtvEQQKA1CUplqT-LzNuKoTzSUssOxxu_7PMoNA&s=10',
     },
     {
       id: 3,
@@ -35,7 +35,7 @@ const SEED = {
       genre: 'Animation',
       rating: 9.0,
       review: 'Strange, gentle and gorgeous. Every frame looks hand-painted.',
-      poster: '',
+      poster: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6_ZMTP-AmWnarhhnLqfSARQzpCthiz-qhJly8ptUfwg&s=10',
     },
   ],
 };
