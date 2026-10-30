@@ -3,60 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>Movie Collection</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🎬 Movie Collection</h1>
-    <nav>
-      <a href="index.html">All Movies</a>
-      <a href="add.html">Add Movie</a>
-    </nav>
+  <header class="top">
+    <div class="brand">
+      <h1>Movie Collection</h1>
+      <p id="stats" class="stats">Loading your shelf…</p>
+    </div>
+    <div class="tools">
+      <input id="search" type="search" placeholder="Search title, director or genre" aria-label="Search movies">
+      <select id="sort" aria-label="Sort movies">
+        <option value="newest">Recently added</option>
+        <option value="rating">Highest rated</option>
+        <option value="title">Title A–Z</option>
+        <option value="year">Newest release</option>
+      </select>
+      <button id="add-btn" class="btn primary" type="button">Add movie</button>
+    </div>
   </header>
 
   <main>
-    <table>
-      <thead>
-        <tr><th>Title</th><th>Director</th><th>Year</th><th>Rating</th><th>Action</th></tr>
-      </thead>
-      <tbody id="movie-list"></tbody>
-    </table>
-    <p id="empty" hidden>No movies yet. Click "Add Movie" to add one.</p>
+    <section id="grid" class="grid" aria-live="polite"></section>
+    <div id="empty" class="empty" hidden>
+      <h2>Nothing on the shelf yet</h2>
+      <p>Add your first movie with a poster, a rating and a short review.</p>
+      <button id="empty-add" class="btn primary" type="button">Add movie</button>
+    </div>
   </main>
 
-  <script>
-    async function loadMovies() {
-      const res = await fetch('/movies');
-      const movies = await res.json();
-      const list = document.getElementById('movie-list');
-      list.innerHTML = '';
-      document.getElementById('empty').hidden = movies.length > 0;
+  <dialog id="dialog">
+    <form id="form" method="dialog">
+      <h2 id="dialog-title">Add movie</h2>
 
-      movies.forEach((m) => {
-        const tr = document.createElement('tr');
-        [m.title, m.director, m.year ?? '-', m.rating ?? '-'].forEach((value) => {
-          const td = document.createElement('td');
-          td.textContent = value;
-          tr.appendChild(td);
-        });
+      <div class="form-grid">
+        <div class="poster-col">
+          <div class="preview" id="preview"><span>Poster preview</span></div>
+          <label for="poster">Poster image URL</label>
+          <input id="poster" type="url" placeholder="https://…/poster.jpg">
+        </div>
 
-        const actionTd = document.createElement('td');
-        const btn = document.createElement('button');
-        btn.textContent = 'Delete';
-        btn.className = 'danger';
-        btn.onclick = async () => {
-          if (confirm('Delete "' + m.title + '"?')) {
-            await fetch('/movies/' + m.id, { method: 'DELETE' });
-            loadMovies();
-          }
-        };
-        actionTd.appendChild(btn);
-        tr.appendChild(actionTd);
-        list.appendChild(tr);
-      });
-    }
-    loadMovies();
-  </script>
+        <div class="fields-col">
+          <label for="title">Title</label>
+          <input id="title" required maxlength="120">
+
+          <label for="director">Director</label>
+          <input id="director" required maxlength="120">
+
+          <div class="row">
+            <div>
+              <label for="year">Year</label>
+              <input id="year" type="number" min="1888" max="2100">
+            </div>
+            <div>
+              <label for="genre">Genre</label>
+              <input id="genre" maxlength="40" placeholder="Drama, Sci-Fi…">
+            </div>
+          </div>
+
+          <label for="rating">Your rating: <output id="rating-out">7.0</output> / 10</label>
+          <input id="rating" type="range" min="0" max="10" step="0.5" value="7">
+        </div>
+      </div>
+
+      <label for="review">Your review</label>
+      <textarea id="review" rows="3" maxlength="1000" placeholder="What did you think?"></textarea>
+
+      <p id="form-error" class="form-error" role="alert"></p>
+
+      <div class="actions">
+        <button type="button" id="cancel" class="btn ghost">Cancel</button>
+        <button type="submit" id="save" class="btn primary">Save movie</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
